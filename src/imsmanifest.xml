@@ -32,48 +32,8 @@ these should remain static. Other schema prefixes are allowed, but can limit int
   are listed.
    -->
 <resources>
-<resource identifier="resource_1" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html">
-<file href="Etiquette/Course.html"/>
-<file href="Etiquette/course.jpg"/>
-<file href="Etiquette/Distracting.html"/>
-<file href="Etiquette/distracting.jpg"/>
-<file href="Etiquette/Play.html"/>
-<file href="Etiquette/play.jpg"/>
-<file href="Etiquette/questions.js"/>
-<file href="Handicapping/calchandi.jpg"/>
-<file href="Handicapping/calcscore.jpg"/>
-<file href="Handicapping/CalculatingHandicap.html"/>
-<file href="Handicapping/CalculatingScore.html"/>
-<file href="Handicapping/Example.html"/>
-<file href="Handicapping/example.jpg"/>
-<file href="Handicapping/Overview.html"/>
-<file href="Handicapping/overview.jpg"/>
-<file href="Handicapping/questions.js"/>
-<file href="HavingFun/friends.jpg"/>
-<file href="HavingFun/fun.jpg"/>
-<file href="HavingFun/HowToBeStylish.html"/>
-<file href="HavingFun/HowToHaveFun.html"/>
-<file href="HavingFun/MakeFriends.html"/>
-<file href="HavingFun/questions.js"/>
-<file href="HavingFun/stylish.jpg"/>
-<file href="Playing/otherscoreing.jpg"/>
-<file href="Playing/OtherScoring.html"/>
-<file href="Playing/Par.html"/>
-<file href="Playing/par.jpg"/>
-<file href="Playing/Playing.html"/>
-<file href="Playing/playing.jpg"/>
-<file href="Playing/questions.js"/>
-<file href="Playing/rules.jpg"/>
-<file href="Playing/RulesOfGolf.html"/>
-<file href="Playing/Scoring.html"/>
-<file href="Playing/scoring.jpg"/>
-<file href="shared/assessmenttemplate.html"/>
-<file href="shared/background.jpg"/>
-<file href="shared/cclicense.png"/>
-<file href="shared/contentfunctions.js"/>
-<file href="shared/launchpage.html"/>
-<file href="shared/scormfunctions.js"/>
-<file href="shared/style.css"/>
-</resource>
+  <resource identifier="resource_1" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html">
+    <file href="shared/launchpage.html"/>
+  </resource>
 </resources>
 </manifest>

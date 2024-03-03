@@ -104,10 +104,14 @@ def create_imsmanifest(project_title):
     # Crear el árbol XML
     tree = ET.ElementTree(root)
 
-    # Escribir el árbol XML en el archivo imsmanifest.xml
-    with open("imsmanifest.xml", "wb") as f:
-        tree.write(f, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+    # Convertir el árbol XML a una cadena de texto con formato
+    xml_string = ET.tostring(root, encoding="utf-8")
+    reparsed = xml.dom.minidom.parseString(xml_string)
+    pretty_xml = reparsed.toprettyxml(indent="    ")  # Establece la indentación a 4
 
+    # Escribir el árbol XML en el archivo imsmanifest.xml
+    with open(project_name + "/imsmanifest.xml", "wb") as f:
+        f.write(pretty_xml.encode("utf-8"))
     print("Archivo imsmanifest.xml creado con éxito.")
 
 
