@@ -34,6 +34,10 @@ these should remain static. Other schema prefixes are allowed, but can limit int
 <resources>
   <resource identifier="resource_1" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html">
     <file href="shared/launchpage.html"/>
+    <file href="shared/index.html"/>
+  </resource>
+    <resource identifier="resource_2" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html">
+    <file href="shared/API.js"/>
   </resource>
 </resources>
 </manifest>
