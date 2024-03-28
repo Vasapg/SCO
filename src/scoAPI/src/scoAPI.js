@@ -5,7 +5,7 @@ let API = null;
  * @param {win} win is the window element of a DOM  
  * @returns The API if it is found, null otherwise.
  */
-function getAPI(win) 
+sco.getAPI = function (win) 
 {
     var nFindAPITries = 0;
     while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
@@ -23,7 +23,7 @@ function getAPI(win)
  * init function is used to initialize the API, it should be called at the beginning of the application.
  * @returns 1 if successfull, 0 otherwise.
 */
-function initAPI() 
+sco.initAPI = function () 
 {
     API = null;
     if ((window.parent) && (window.parent != window)){
@@ -48,7 +48,7 @@ function initAPI()
  * Finish the interaction of the API by setting the activity as completed.
  * @returns 1 if successfull, 0 otherwise.
  */
-function finishAPI() 
+sco.finishAPI = function () 
 {
     var API = getAPI(window);
     if (API != null) { 
@@ -64,7 +64,7 @@ function finishAPI()
  * @param {score} score is the max score of the lesson to be set.
  * @returns 1 if successfull, 0 otherwise.
  */
-function setScore(score)
+sco.setGrade = function (score)
 {
     if (API == null)
     {
@@ -82,7 +82,7 @@ function setScore(score)
  * @returns 1 if successfull, 0 otherwise.
  */
 
-function setMaxScore(score)
+sco.setMaxGrade = function (score)
 {
     if (API == null)
     {
@@ -100,7 +100,7 @@ function setMaxScore(score)
  * @returns 1 if successfull, 0 otherwise.
  */
 
-function setMinScore(score)
+sco.setMinGrade =  function (score)
 {
     if (API == null)
     {
@@ -119,17 +119,87 @@ function setMinScore(score)
  * @returns 1 if successfull, 0 otherwise.
  */
 
-function getDocument(URL, parameters){
+sco.getDocumentXML = function (URL, parameters){
+    console.log("getDocumentXML started with URL: " + URL);
     fetch(URL)
     .then(response => response.text())
     .then(data => {
-        console.info("Document was retrived successffully")
-		var xmlDoc = new DOMParser().parseFromString(data, "text/xml");
+        console.info("XML Document was retrieved successfully")
+        var xmlDoc = new DOMParser().parseFromString(data, "text/xml");
         if (!parameters || parameters == null)
             return (xmlDoc);
-	})
-	.catch(error => console.error(error));
+        // If parameters are provided, find the tags in the XML document
+        parameters.forEach(parameter => {
+            console.log("Processing parameter: " + parameter);
+            let tags = xmlDoc.getElementsByTagName(parameter);
+            if (!tags || tags == null)
+            {
+                console.warn("Parameter: " + parameter + " not found");
+                return;
+            }
+            let tagObjects = Array.from(tags).map(tag => {
+                let obj = {};
+                Array.from(tag.attributes).forEach(attr => {
+                    obj[attr.name] = attr.value;
+                });
+                return obj;
+            });
+            // Save the tag objects in local storage
+            localStorage.setItem(parameter, JSON.stringify(tagObjects));
+            console.log("Saved parameter " + parameter + " to local storage");
+        });
+    })
+    .catch(error => console.error("Error in getDocumentXML: ", error));
 }
+
+/**
+ * 
+ * @param {URL, parameters} URL is the the objective of the fetch, if specified, parameters is an array which defines what to retrieve from the JSON document
+ * and store in the localStorage as JavaScript Objects.
+ * @returns 1 if successfull, 0 otherwise.
+ */
+
+sco.getDocumentJSON = function (URL, parameters){
+    console.log("getDocumentJSON started with URL: " + URL);
+
+    function findInObject(obj, key) {
+        if (!obj || typeof obj !== 'object') {
+            return null;
+        }
+        if (obj.hasOwnProperty(key)) {
+            return obj[key];
+        }
+        for (let i = 0; i < Object.keys(obj).length; i++) {
+            let found = findInObject(obj[Object.keys(obj)[i]], key);
+            if (found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    fetch(URL)
+    .then(response => response.json())
+    .then(data => {
+        console.info("JSON Document was retrieved successfully")
+
+        // If parameters are provided, find the keys in the JSON document
+        parameters.forEach(parameter => {
+            console.log("Processing parameter: " + parameter);
+            let value = findInObject(data, parameter);
+
+            if (value !== null) {
+                // Save the value in local storage
+                localStorage.setItem(parameter, JSON.stringify(value));
+                console.log("Saved parameter " + parameter + " to local storage");
+            } else {
+                console.warn("Parameter: " + parameter + " not found");
+            }
+        });
+    })
+    .catch(error => console.error("Error in getDocumentJSON: ", error));
+}
+
 
 // function getConfig() {
 //     return fetch("https://raw.githubusercontent.com/Vasapg/PIE-SCORM/main/Self-Assesment-4/exercises/config.xml")
