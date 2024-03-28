@@ -96,6 +96,41 @@ sco.setMaxGrade = function (score)
 
 /**
  * 
+ * Allows to mantain run time information when the activity is ended or exit and be recovered when access again.
+ * @returns 1 if successfull, 0 otherwise.
+ */
+
+sco.suspendSession = function()
+{
+    if (API == null)
+    {
+        console.error("API is not initialized");
+        return (-1);
+    }
+    API.LMSSetValue("cmi.core.exit", "suspend");
+    console.info("exit set to suspend ");
+    return (1);
+}
+
+/**
+ * Allows to end and dump all run time information when the activity is ended or exit.
+ * @returns 1 if successfull, 0 otherwise.
+ */
+
+sco.logoutSession = function()
+{
+    if (API == null)
+    {
+        console.error("API is not initialized");
+        return (-1);
+    }
+    API.set("cmi.core.exit", "logout");
+    console.info("exit set to logout ");
+    return (1);
+}
+
+/**
+ * 
  * @param {score} score is the minimum score of the lesson to be set.
  * @returns 1 if successfull, 0 otherwise.
  */
@@ -199,6 +234,7 @@ sco.getDocumentJSON = function (URL, parameters){
     })
     .catch(error => console.error("Error in getDocumentJSON: ", error));
 }
+
 
 
 // function getConfig() {
