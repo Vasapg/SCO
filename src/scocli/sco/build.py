@@ -2,64 +2,23 @@
 import xml.etree.ElementTree as ET
 import os
 import xml.dom.minidom
+import subprocess
 
 
 def create_javascript_file(project_name):
-    javascript_code = """function FindAPI(win) 
-{
-    var nFindAPITries = 0;
-    while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
-        nFindAPITries ++;
-        if (nFindAPITries > 500) {
-            alert("Error in finding API -- too deeply nested.");
-            return null;
-        }
-        win = win.parent;
-    }
-    return win.API;
-}
-
-function init() 
-{
-    var API = null;
-    if ((window.parent) && (window.parent != window)){
-        API = FindAPI(window.parent);
-    } 
-    if ((API == null) && (window.opener != null)){
-        API = FindAPI(window.opener); 
-    } 
-    if (API == null) { 
-        alert("No API adapter found"); 
-    } 
-    else { 
-        API.LMSInitialize(""); 
-    } 
-}
-
-function finish() 
-{
-    var API = FindAPI(window);
-    if (API != null) { 
-        API.LMSSetValue("cmi.core.lesson_status","completed");
-        API.LMSSetValue("cmi.core.score.max", "");
-        API.LMSSetValue("cmi.core.score.min", "0");
-        API.LMSSetValue("cmi.core.score.raw", "10");
-        API.LMSFinish("");
-    } 
-}
-
-window.onload = init();"""
+    javascript_code = """
+window.onload = sco.initAPI();"""
 
     # Escribir el código JavaScript en el archivo javascript.js
-    with open(project_name + "/Scripts/javascript.js", "w") as f:
+    with open(project_name + "/javascript/APIinit.js", "w") as f:
         f.write(javascript_code)
 
     print("Archivo javascript.js creado con éxito.")
 
 
-def create_imsmanifest(project_title):
+def create_imsmanifest(project_name):
     # Crear el elemento raíz <manifest>
-    identifier = project_title.replace(" ", "_")
+    identifier = project_name.replace(" ", "_")
     root = ET.Element("manifest")
     root.set("xmlns", "http://www.imsglobal.org/xsd/imscp_v1p1")
     root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
@@ -84,12 +43,12 @@ def create_imsmanifest(project_title):
     organization = ET.SubElement(organizations, "organization")
     organization.set("identifier", identifier + "_org")
     title = ET.SubElement(organization, "title")
-    title.text = project_title
+    title.text = project_name
     item = ET.SubElement(organization, "item")
     item.set("identifier", "item_1")
     item.set("identifierref", "resource_1")
     title = ET.SubElement(item, "title")
-    title.text = project_title
+    title.text = project_name
 
     # Agregar la sección <resources>
     resources = ET.SubElement(root, "resources")
@@ -117,7 +76,7 @@ def create_imsmanifest(project_title):
 
 def create_scorm_project(project_name):
     # Define folder names
-    folders = ['images', 'scripts', 'styles', 'data']
+    folders = ['images', 'javascript', 'css', 'html']
 
     # Create project folder
     os.mkdir(project_name)
@@ -130,7 +89,7 @@ def create_scorm_project(project_name):
         print(f"Created '{folder}' folder.")
 
     # Create index.html file
-    index_html = os.path.join(project_name, 'index.html')
+    index_html = os.path.join(project_name, 'html/index.html')
     with open(index_html, 'w') as f:
         f.write('<!DOCTYPE html>\n<html>\n<head>\n<title>SCORM Project</title>\n</head>\n<body>\n<h1>Welcome to my SCORM project!</h1>\n</body>\n</html>')
     print("Created 'index.html' file.")
@@ -139,6 +98,19 @@ def create_scorm_project(project_name):
 
     print("SCORM project structure created successfully.")
 
-if __name__ == "__main__":
+def install_npm_package(package_name, project_path):
+    try:
+        subprocess.check_call(['npm', 'i', package_name], cwd=project_path)
+        print(f"Successfully installed {package_name}")
+    except subprocess.CalledProcessError:
+        print(f"Failed to install {package_name}")
+
+def main():
     project_name = input("Enter project name: ")
+    project_path = os.path.join(os.getcwd(), project_name)
     create_scorm_project(project_name)
+    install_npm_package("scoapi", project_path)
+
+
+if __name__ == "__main__":
+    main()
