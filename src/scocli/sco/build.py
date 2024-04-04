@@ -91,7 +91,8 @@ def create_scorm_project(project_name):
     # Create index.html file
     index_html = os.path.join(project_name, 'html/index.html')
     with open(index_html, 'w') as f:
-        f.write('<!DOCTYPE html>\n<html>\n<head>\n<title>SCORM Project</title>\n</head>\n<body>\n<h1>Welcome to my SCORM project!</h1>\n</body>\n</html>')
+        f.write('<!DOCTYPE html>\n<html>\n<head>\n<title>SCORM Project</title>\n</head>\n<body>\n'
+                + '<script src = "node_modules/scoapi/src/scoAPI.js"> </script><h1>Welcome to my SCORM project!</h1>\n</body>\n</html>')
     print("Created 'index.html' file.")
     create_imsmanifest(project_name)
     create_javascript_file(project_name)
