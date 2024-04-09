@@ -42,6 +42,7 @@ sco.initAPI = function ()
         console.info('API found')
     else
         console.error('API not found')
+    return (API);
 }
 
 /**
@@ -96,6 +97,24 @@ sco.setMaxGrade = function (score)
 
 /**
  * 
+ * @param {score} score is the minimum score of the lesson to be set.
+ * @returns 1 if successfull, 0 otherwise.
+ */
+
+sco.setMinGrade =  function (score)
+{
+    if (API == null)
+    {
+        console.error("API is not initialized");
+        return (-1);
+    }
+    API.LMSSetValue("cmi.core.score.min", score);
+    console.info("Min score set to: " + score);
+    return (1);
+}
+
+/**
+ * 
  * Allows to mantain run time information when the activity is ended or exit and be recovered when access again.
  * @returns 1 if successfull, 0 otherwise.
  */
@@ -126,24 +145,6 @@ sco.logoutSession = function()
     }
     API.set("cmi.core.exit", "logout");
     console.info("exit set to logout ");
-    return (1);
-}
-
-/**
- * 
- * @param {score} score is the minimum score of the lesson to be set.
- * @returns 1 if successfull, 0 otherwise.
- */
-
-sco.setMinGrade =  function (score)
-{
-    if (API == null)
-    {
-        console.error("API is not initialized");
-        return (-1);
-    }
-    API.LMSSetValue("cmi.core.score.min", score);
-    console.info("Min score set to: " + score);
     return (1);
 }
 
@@ -204,8 +205,8 @@ sco.getDocumentJSON = function (URL, parameters){
         if (obj.hasOwnProperty(key)) {
             return obj[key];
         }
-        for (let i = 0; i < Object.keys(obj).length; i++) {
-            let found = findInObject(obj[Object.keys(obj)[i]], key);
+        for (const element of Object.keys(obj)) {
+            let found = findInObject(obj[element], key);
             if (found) {
                 return found;
             }
