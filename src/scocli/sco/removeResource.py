@@ -49,7 +49,7 @@ def remove_resource_from_imsmanifest(resource_id):
 
     print(f"Recurso con identificador '{resource_id}' eliminado del archivo imsmanifest.xml.")
 
-if __name__ == "__main__":
+def main():
     # Verificar que se pasó el argumento correctamente
     if len(sys.argv) != 2:
         print("Uso: python script.py <identificador_recurso>")
@@ -59,3 +59,6 @@ if __name__ == "__main__":
 
     # Eliminar el recurso del imsmanifest.xml
     remove_resource_from_imsmanifest(resource_id)
+
+if __name__ == "__main__":
+    main()

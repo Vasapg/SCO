@@ -20,6 +20,11 @@ def print_element(element, indent):
     for child in element:
         print_element(child, indent + 2)
 
-if __name__ == "__main__":
+def main():
     manifest_path = "imsmanifest.xml"  # Cambia esto al path de tu archivo imsmanifest.xml
     print_manifest_tree(manifest_path)
+
+if __name__ == "__main__":
+    main()
+
+

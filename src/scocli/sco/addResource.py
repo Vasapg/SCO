@@ -68,7 +68,7 @@ def add_resource_to_imsmanifest(files):
 
     print(f"Archivos {', '.join(files)} añadidos al archivo imsmanifest.xml.")
 
-if __name__ == "__main__":
+def main():
     # Verificar que se pasó al menos un argumento
     if len(sys.argv) < 2:
         print("Uso: python script.py <archivo1> <archivo2> ...")
@@ -84,3 +84,6 @@ if __name__ == "__main__":
 
     # Agregar los archivos al imsmanifest.xml
     add_resource_to_imsmanifest(files)
+
+if __name__ == "__main__":
+    main()
