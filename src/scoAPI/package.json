@@ -1,16 +1,20 @@
 {
   "name": "scoapi",
-  "version": "1.0.1",
-  "description": "API Wrapper for SCORM applications.",
-  "main": "rollup.config.js",
+  "version": "1.1.0",
+  "description": "JS wrapper to simply SCORM's API usage.",
+  "main": "scoAPI.js",
   "scripts": {
-    "test": "testme"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Vasapg/SCO.git"
+    "url": "git+https://github.com/Vasapg/SCO.git"
   },
-  "author": "Victor Sanz Ararat",
+  "keywords": [
+    "API",
+    "SCORM"
+  ],
+  "author": "Vasapg",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Vasapg/SCO/issues"

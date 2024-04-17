@@ -7,7 +7,8 @@ import subprocess
 
 def create_javascript_file(project_name):
     javascript_code = """
-window.onload = sco.initAPI();"""
+    const scoAPI = require('scoapi')
+    window.onload = scoAPI().Init();"""
 
     # Escribir el código JavaScript en el archivo javascript.js
     with open(project_name + "/javascript/APIinit.js", "w") as f:

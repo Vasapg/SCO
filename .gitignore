@@ -3,3 +3,5 @@ dist
 scocli.egg-info
 pruebas
 .venv
+venv
+simpleSCORM
