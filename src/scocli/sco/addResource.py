@@ -15,6 +15,26 @@ def prettify_xml(elem):
             lines.append(node.toxml())
     return "\n".join(lines)
 
+def find_or_create_element(root, xpath, element_tag):
+    """Encuentra o crea un elemento en el árbol XML"""
+    element = root.find(xpath)
+    if element is None:
+        element = ET.SubElement(root, element_tag)
+    return element
+
+def add_files_to_resource(resource, files):
+    """Agrega archivos a un recurso"""
+    for file_path in files:
+        if not os.path.exists(file_path):
+            print("El archivo " + file_path + " no existe")
+            sys.exit(1)
+        file_name = os.path.basename(file_path)
+        existing_file = resource.find(f"./{{http://www.imsglobal.org/xsd/imscp_v1p1}}file[@href='{file_name}']")
+        if existing_file is None:
+            file_element = ET.SubElement(resource, "{http://www.imsglobal.org/xsd/imscp_v1p1}file")
+            file_element.set("href", file_name)
+            file_element.tail = '\n'  # Agregar salto de línea después de la etiqueta <file>
+
 def add_resource_to_imsmanifest(files):
     # Buscar el archivo imsmanifest.xml en el directorio actual
     current_directory = os.getcwd()
@@ -30,37 +50,40 @@ def add_resource_to_imsmanifest(files):
     root = tree.getroot()
 
     # Encontrar o crear el elemento de recursos
-    resources = root.find("./{http://www.imsglobal.org/xsd/imscp_v1p1}resources")
-    if resources is None:
-        resources = ET.SubElement(root, "{http://www.imsglobal.org/xsd/imscp_v1p1}resources")
+    resources = find_or_create_element(root, "./{http://www.imsglobal.org/xsd/imscp_v1p1}resources", "{http://www.imsglobal.org/xsd/imscp_v1p1}resources")
+
+    # Encontrar o crear el elemento de organización
+    organization = find_or_create_element(root, "./{http://www.imsglobal.org/xsd/imscp_v1p1}organizations/{http://www.imsglobal.org/xsd/imscp_v1p1}organization", "{http://www.imsglobal.org/xsd/imscp_v1p1}organization")
 
     # Verificar si el resource ya existe
-    existing_resource = resources.find(f"./{{http://www.imsglobal.org/xsd/imscp_v1p1}}resource[@identifier='{os.path.basename(files[0])}']")
+    identifier = os.path.splitext(os.path.basename(files[0]))[0] if len(files) > 1 else input("Ingrese el identificador del recurso (o presione Enter para usar el nombre del archivo principal sin extensión): ")
+    existing_resource = resources.find(f"./{{http://www.imsglobal.org/xsd/imscp_v1p1}}resource[@identifier='{identifier}']")
     if existing_resource is not None:
         # El resource ya existe, agregar solo los archivos que faltan
-        for file_path in files:
-            file_name = os.path.basename(file_path)
-            existing_file = existing_resource.find(f"./{http://www.imsglobal.org/xsd/imscp_v1p1}file[@href='{file_name}']")
-            if existing_file is None:
-                file_element = ET.SubElement(existing_resource, "{http://www.imsglobal.org/xsd/imscp_v1p1}file")
-                file_element.set("href", file_name)
-                file_element.tail = '\n'  # Agregar salto de línea después de la etiqueta <file>
+        add_files_to_resource(existing_resource, files)
         existing_resource.tail = '\n'  # Agregar salto de línea después de la etiqueta <resource>
     else:
         # El resource no existe, crear uno nuevo y agregar archivos
         new_resource = ET.SubElement(resources, "{http://www.imsglobal.org/xsd/imscp_v1p1}resource")
-        new_resource.set("identifier", os.path.basename(files[0]))
+        new_resource.set("identifier", identifier)
         new_resource.set("type", "webcontent")
         new_resource.set("{http://www.adlnet.org/xsd/adlcp_v1p3}scormType", "sco")
-        for file_path in files:
-            if not os.path.exists(file_path):
-                print("El archivo " + file_path + " no existe")
-                sys.exit(1)
-            file_name = os.path.basename(file_path)
-            file_element = ET.SubElement(new_resource, "{http://www.imsglobal.org/xsd/imscp_v1p1}file")
-            file_element.set("href", file_name)
-            file_element.tail = '\n'  # Agregar salto de línea después de la etiqueta <file>
+        new_resource.set("href", files[0])
+        add_files_to_resource(new_resource, files)
+
+        # Crear un ítem de recurso en la sección de organización
+        item = ET.SubElement(organization, "{http://www.imsglobal.org/xsd/imscp_v1p1}item")
+        item.set("identifier", "item_" + identifier)
+        item.set("identifierref", identifier)
+        title = input(f"Ingrese el título del recurso '{identifier}' (o presione Enter para omitir): ")
+        if title:
+            title_element = ET.SubElement(item, "{http://www.imsglobal.org/xsd/imscp_v1p1}title")
+            title_element.text = title
+
         new_resource.tail = '\n'  # Agregar salto de línea después de la etiqueta <resource>
+        # Write the XML tree to the imsmanifest.xml file with readable formatting
+        ET.register_namespace("", "http://www.imsglobal.org/xsd/imscp_v1p1")
+        ET.indent(tree, '  ')   # Indentar el árbol XML
 
     # Escribir el árbol XML en el archivo imsmanifest.xml con formato legible
     with open(xml_file, "wb") as f:
