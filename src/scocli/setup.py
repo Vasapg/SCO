@@ -11,5 +11,7 @@ setup(
         'sco/addResource.py',
         'sco/build.py',
         'sco/seeManifest.py',
+        'sco/checkManifest.py',
+        'sco/organizeManifest.py'
         ],
 )
