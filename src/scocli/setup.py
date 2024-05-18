@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='scocli',
-    version='0.1',
+    version='1.0',
     author= 'Vasapg',
     description= 'CLI to facilitate the creation and management of SCORM packages',
     url='https://github.com/Vasapg/SCO/tree/main',
