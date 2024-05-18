@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import xml.etree.ElementTree as ET
 
 def print_manifest_tree(manifest_path, indent=0):

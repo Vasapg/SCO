@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -32,7 +33,7 @@ def add_files_to_resource(resource, files):
         existing_file = resource.find(f"./{{http://www.imsglobal.org/xsd/imscp_v1p1}}file[@href='{file_name}']")
         if existing_file is None:
             file_element = ET.SubElement(resource, "{http://www.imsglobal.org/xsd/imscp_v1p1}file")
-            file_element.set("href", file_name)
+            file_element.set("href", file_path)
             file_element.tail = '\n'  # Agregar salto de línea después de la etiqueta <file>
 
 def add_resource_to_imsmanifest(files):

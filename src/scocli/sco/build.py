@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #coding=utf-8
 import xml.etree.ElementTree as ET
 import os
@@ -57,9 +58,9 @@ def create_imsmanifest(project_name):
     resource.set("identifier", "resource_1")
     resource.set("type", "webcontent")
     resource.set("{http://www.adlnet.org/xsd/adlcp_v1p3}scormType", "sco")
-    resource.set("href", "index.html")
+    resource.set("href", "html/index.html")
     file = ET.SubElement(resource, "file")
-    file.set("href", "index.html")
+    file.set("href", "html/index.html")
 
     # Crear el árbol XML
     tree = ET.ElementTree(root)
@@ -90,7 +91,7 @@ def create_scorm_project(project_name):
         print(f"Created '{folder}' folder.")
 
     # Create index.html file
-    index_html = os.path.join(project_name, 'index.html')
+    index_html = os.path.join(project_name, 'html/index.html')
     with open(index_html, 'w') as f:
         f.write('<!DOCTYPE html>\n<html>\n<head>\n<title>SCORM Project</title>\n</head>\n<body>\n'
                 + '<script src = "node_modules/scoapi/scoAPI.js"> </script><h1>This is the index of the project, where the activity begins.</h1>\n</body>\n</html>')
