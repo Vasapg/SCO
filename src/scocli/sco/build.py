@@ -5,19 +5,6 @@ import os
 import xml.dom.minidom
 import subprocess
 
-
-def create_javascript_file(project_name):
-    javascript_code = """
-    const scoAPI = require('scoapi')
-    window.onload = scoAPI().Init();"""
-
-    # Escribir el código JavaScript en el archivo javascript.js
-    with open(project_name + "/javascript/APIinit.js", "w") as f:
-        f.write(javascript_code)
-
-    print("Archivo javascript.js creado con éxito.")
-
-
 def create_imsmanifest(project_name):
     # Crear el elemento raíz <manifest>
     identifier = project_name.replace(" ", "_")
