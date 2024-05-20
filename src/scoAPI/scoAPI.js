@@ -128,6 +128,8 @@ function setMinGrade(score)
 
 function suspendSession()
 {
+    if (API == null || API == undefined)
+    API = getAPI(window);
     if (API == null)
     {
         console.error("API is not initialized");
@@ -146,6 +148,8 @@ function suspendSession()
 
 function logoutSession()
 {
+    if (API == null || API == undefined)
+    API = getAPI(window);
     if (API == null)
     {
         console.error("API is not initialized");
@@ -155,6 +159,72 @@ function logoutSession()
     API.Commit("");
     console.info("exit set to logout ");
     return (1);
+}
+
+/**
+ * Saves the provided data object to the `suspend_data` variable in the SCORM data model.
+ * @param {Object} data - The data object to be saved.
+ * @returns {number} - 1 if successful, 0 otherwise.
+ */
+function saveSuspendData(data) {
+    if (API == null || API == undefined)
+        API = getAPI(window);
+    if (API == null) {
+        console.error("API is not initialized");
+        return 0;
+    }
+    logoutSession();
+    API.SetValue("cmi.suspend_data", JSON.stringify(data));
+    API.Commit("");
+    console.info("Data saved to suspend_data: " + JSON.stringify(data));
+    return 1;
+}
+
+/**
+ * Retrieves the saved data from the `suspend_data` variable in the SCORM data model.
+ * @returns {Object} - The retrieved data object.
+ */
+function retrieveSuspendData() {
+    if (API == null || API == undefined)
+        API = getAPI(window);
+    if (API == null) {
+        console.error("API is not initialized");
+        return null;
+    }
+    let suspendData = API.GetValue("cmi.suspend_data");
+    if (suspendData) {
+        console.info("Data retrieved from suspend_data: " + suspendData);
+        return JSON.parse(suspendData);
+    } else {
+        console.info("No data found in suspend_data");
+        return null;
+    }
+}
+
+
+function saveChoiceQuestion(question, answer, student_response, number)
+{
+    if (API == null || API == undefined)
+        API = getAPI(window);
+    if (API == null)
+    {
+        console.error("API is not initialized");
+        return (-1);
+    }
+    console.info("Number interaction: " + number);
+    // Save the question and answer in SCORM data model
+    let interaction = "cmi.interactions." + number + ".";
+    API.SetValue(interaction + "id", "question_" + number);
+    API.SetValue(interaction + "type", "choice");
+    API.SetValue(interaction + "description", question);
+    API.SetValue(interaction + "correct_responses." + number + ".pattern", answer);
+    API.SetValue(interaction + "learner_response", student_response);
+    if (answer == student_response)
+        API.SetValue(interaction + "result", "correct");
+    else
+        API.SetValue(interaction + "result", "incorrect");
+    API.SetValue(interaction + "time_stamp", new Date().toISOString());
+    API.Commit("");
 }
 
 /**
