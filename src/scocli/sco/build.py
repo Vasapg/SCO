@@ -84,7 +84,6 @@ def create_scorm_project(project_name):
                 + '<script src = "node_modules/scoapi/scoAPI.js"> </script><h1>This is the index of the project, where the activity begins.</h1>\n</body>\n</html>')
     print("Created 'index.html' file.")
     create_imsmanifest(project_name)
-    create_javascript_file(project_name)
 
     print("SCORM project structure created successfully.")
 
