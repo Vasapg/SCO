@@ -30,7 +30,9 @@ $ source myenv/bin/activate
 And then try to use pip install again
 
 ## scocli
-scocli is a package of python scripts to manage the imsmanifest.xml file which defines a SCORM application. The available script are:
+scocli is a package of python scripts to manage the imsmanifest.xml file which defines a SCORM application.
+
+## scocli Scripts
 
 ### build
 build.py allows you to create a SCORM application as a template, installing algo the javaScript API library. The structure of the template is as follows:
@@ -70,7 +72,7 @@ Create a new resource in the SCORM manifest, and also adds a new element to the 
 Run it from the command line and pass the paths of the files you want to add to the new resource in the `imsmanifest.xml`. For example:
 
 ```bash
-python script.py file1.html file2.css -i [identifier]
+$ addResource.py <main_file.html> [files]
 ```
 Then, you will be prompted to add an identifier for the new resource and a title. Do not declare two resource with the same identifier.
 
@@ -84,7 +86,7 @@ Deletes a resource from the manifest, deleting all the organization items that r
 
 Run it from the command line and specifie the identifier of the resource to be deleted
 ```bash
-removeResource.py identifier
+$ removeResource.py <item_identifier>
 ```
 
 ### seeManifest
@@ -96,6 +98,65 @@ Prints the manifest in a pretiffy format
 Run it from the terminal in the imsmanifest.xml directory.
 
 ```bash
-seeManifest.py
+$ seeManifest.py
+```
+### organizeManifest
+
+Allows to organize the order in which the contents of the SCORM application are presented.
+
+#### Usage
+
+Run it from the terminal in the imsmanifest.xml directory. Indicate the identifier of the resource you want to reorganize, and the new position.
+
+```bash
+$ organize.py <item_identifier> <new_position>
+```
+### checkManifest
+
+Validates the correct configuration of the imsmanifest.xml file, taking into account all the files in the projects. The next validations are checked:
+
+- The existence of a imsmanifest.xml file in the root of the project.
+- The correct structure of the imsmanifest, checking that every opened tag is closes.
+- The organization of the manifest, checking that the tags "metadata" "organization" and "resources" exists and have at least one item.
+- The declaration of all the project files in the imsmanifest resources section, to ensure that every declare metadata is declared and accesible.
+
+### Usage
+
+Run it from the terminal in the imsmanifest.xml directory
+
+```bash
+$ checkManifest.py
+```
+
+### bundle
+
+Creates the .zip package to be uploaded in the LMS.
+
+#### Usage
+
+Run it from the terminal in the imsmanifest.xml directory. The name of .zip file created will be the name of the current directory.
+
+```bash
+$ bundle.py
+```
+## scoapi
+scoapi is a JavaScript to wrap the functionality of the SCORM's API in a simplified interface for developing.
+
+## Interface:
+
+### initAPI()
+
+Intializes the SCORM API, it is recommended to add this call at the beginning of the SCORM application. It returns the API is succesfull, returns null otherwise.
+
+### Usage
+```javascript
+initAPI()
+```
+### finishAPI()
+It terminates the interaction with the SCORM API, setting the status of the current activity to "completed". returns 1 if successfull, 0 otherwise.
+
+### Usage
+```javascript
+finishAPI()
 ```
 
