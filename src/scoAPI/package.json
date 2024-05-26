@@ -1,6 +1,6 @@
 {
   "name": "scoapi",
-  "version": "1.2.1",
+  "version": "1.3.1",
   "description": "JS wrapper to simply SCORM's API usage.",
   "main": "scoAPI.js",
   "scripts": {
